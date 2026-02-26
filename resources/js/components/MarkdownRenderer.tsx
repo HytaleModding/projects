@@ -1,4 +1,7 @@
+import hljs from 'highlight.js';
 import { marked } from 'marked';
+import { markedHighlight } from 'marked-highlight';
+import 'highlight.js/styles/github-dark.css';
 import { useEffect, useState } from 'react';
 
 interface MarkdownRendererProps {
@@ -6,20 +9,26 @@ interface MarkdownRendererProps {
   className?: string;
 }
 
+marked.use(
+    markedHighlight({
+        langPrefix: 'hljs language-',
+        highlight(code: string, lang: string) {
+            const language = hljs.getLanguage(lang) ? lang : 'plaintext';
+            return hljs.highlight(code, { language }).value;
+        },
+    }),
+);
+
+marked.setOptions({
+  gfm: true,
+  breaks: true,
+});
+
 export default function MarkdownRenderer({ content, className = '' }: MarkdownRendererProps) {
   const [htmlContent, setHtmlContent] = useState('');
 
   useEffect(() => {
-    marked.setOptions({
-      gfm: true,
-      breaks: true,
-    });
-
-
-    Promise.resolve(marked.parse(content)).then((parsed) => {
-      setHtmlContent(parsed);
-      console.log(parsed);
-    });
+    Promise.resolve(marked.parse(content)).then(setHtmlContent);
   }, [content]);
 
   return (

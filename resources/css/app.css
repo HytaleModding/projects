@@ -8,6 +8,23 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Let highlight.js control code block appearance */
+.prose pre {
+  padding: 0;
+  background: transparent;
+}
+.prose pre code {
+  background: transparent;
+  color: inherit;
+  font-size: inherit;
+  padding: 0;
+  border-radius: 0;
+}
+.prose pre code.hljs {
+  border-radius: 0.5rem;
+  padding: 1rem 1.25rem;
+}
+
 @theme {
     --font-sans:
         'Instrument Sans', ui-sans-serif, system-ui, sans-serif,
