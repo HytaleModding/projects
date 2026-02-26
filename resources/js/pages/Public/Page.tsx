@@ -1,8 +1,11 @@
-import { BookOpenIcon } from '@heroicons/react/24/outline';
+import { BookOpenIcon, ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import { Head } from '@inertiajs/react';
 
-import { Badge } from '@/components/ui/badge';
 import MarkdownRenderer from '@/components/MarkdownRenderer';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import PublicLayout from '@/layouts/public-layout';
 import { getMarkdownPreview } from '@/utils/markdown';
 
 interface User {
@@ -54,19 +57,20 @@ export default function PublicPage({ mod, page, navigation }: Props) {
 
   const renderNavigation = (pages: NavigationPage[], level = 0) => {
     return pages.map((navPage) => (
-      <div key={navPage.id} className={`ml-${level * 4}`}>
+      <div key={navPage.id} className={`ml-${level * 3}`}>
         <a
           href={`/docs/${mod.slug}/${navPage.slug}`}
-          className={`block py-1 px-2 text-sm rounded hover:bg-gray-100 ${
+          className={`flex items-center py-2 px-3 text-sm rounded-md transition-colors group ${
             navPage.id === page.id
-              ? 'bg-blue-50 text-blue-700 font-medium'
-              : 'text-gray-300'
+              ? 'bg-accent text-accent-foreground font-medium'
+              : 'text-muted-foreground hover:text-foreground hover:bg-accent/50'
           }`}
         >
-          {navPage.title}
+          <BookOpenIcon className="h-4 w-4 mr-2 shrink-0" />
+          <span className="truncate">{navPage.title}</span>
         </a>
         {navPage.children && navPage.children.length > 0 && (
-          <div className="ml-4">
+          <div className="ml-3 border-l border-border/50 pl-3 mt-1">
             {renderNavigation(navPage.children, level + 1)}
           </div>
         )}
@@ -74,105 +78,167 @@ export default function PublicPage({ mod, page, navigation }: Props) {
     ));
   };
 
+  // Find previous and next pages for navigation
+  const flattenPages = (pages: NavigationPage[]): NavigationPage[] => {
+    const result: NavigationPage[] = [];
+    pages.forEach(p => {
+      result.push(p);
+      if (p.children) {
+        result.push(...flattenPages(p.children));
+      }
+    });
+    return result;
+  };
+
+  const allPages = flattenPages(navigation);
+  const currentIndex = allPages.findIndex(p => p.id === page.id);
+  const prevPage = currentIndex > 0 ? allPages[currentIndex - 1] : null;
+  const nextPage = currentIndex < allPages.length - 1 ? allPages[currentIndex + 1] : null;
+
+  const breadcrumbs = [
+    { title: page.title, href: `/docs/${mod.slug}/${page.slug}` }
+  ];
+
   return (
-    <div className="min-h-screen bg-gray-900">
+    <PublicLayout modName={mod.name} modSlug={mod.slug} breadcrumbs={breadcrumbs}>
       <Head title={`${page.title} - ${mod.name} Documentation`} />
 
-      {/* Header */}
-      <header className="bg-gray-600 text-white border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">
-                <a href={`/docs/${mod.slug}`} className="hover:text-blue-600">
-                  {mod.name}
-                </a>
-              </h1>
-              <p className="mt-1 text-gray-200">{mod.description}</p>
-            </div>
-            <Badge className="bg-green-100 text-green-800">
-              Public Documentation
-            </Badge>
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <div className="lg:col-span-1">
+          <div className="sticky top-6 space-y-6">
+            <Card>
+              <CardHeader className="pb-4">
+                <CardTitle className="text-lg">
+                  <a
+                    href={`/docs/${mod.slug}`}
+                    className="hover:text-primary transition-colors"
+                  >
+                    {mod.name}
+                  </a>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <p className="text-sm text-muted-foreground">{mod.description}</p>
+                <div className="flex items-center space-x-2">
+
+                  <span className="text-sm text-muted-foreground">
+                    by {mod.owner.name}
+                  </span>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Navigation */}
+            <Card>
+              <CardHeader className="pb-4">
+                <CardTitle className="text-lg">Contents</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {navigation.length === 0 ? (
+                  <div className="text-center py-4">
+                    <BookOpenIcon className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
+                    <p className="text-sm text-muted-foreground">No pages available</p>
+                  </div>
+                ) : (
+                  <nav className="space-y-1">
+                    {renderNavigation(navigation)}
+                  </nav>
+                )}
+              </CardContent>
+            </Card>
           </div>
         </div>
-      </header>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          {/* Sidebar Navigation */}
-          <div className="lg:col-span-1">
-            <div className="bg-gray-900 rounded-lg shadow-sm border p-6 sticky top-8">
-              <h3 className="text-lg font-semibold text-gray-300 mb-4">Documentation</h3>
-              {navigation.length === 0 ? (
-                <div className="text-center py-4">
-                  <BookOpenIcon className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                  <p className="text-gray-600 text-sm">No pages available</p>
+        {/* Main Content */}
+        <div className="lg:col-span-3">
+          <Card className="mb-8">
+            {/* Page Header */}
+            <CardHeader className="border-b">
+              <div className="space-y-2">
+                <CardTitle className="text-2xl">{page.title}</CardTitle>
+                <div className="flex items-center justify-between text-sm text-muted-foreground">
+                  <span>Last updated {formatDate(page.updated_at)}</span>
+                  {!page.published && (
+                    <Badge variant="outline">Draft</Badge>
+                  )}
                 </div>
-              ) : (
-                <nav className="space-y-1">
-                  {renderNavigation(navigation)}
-                </nav>
-              )}
-            </div>
-          </div>
-
-          {/* Main Content */}
-          <div className="lg:col-span-3">
-            <div className="bg-gray-900 rounded-lg shadow-sm border">
-              {/* Page Header */}
-              <div className="border-b px-6 py-4">
-                <h2 className="text-2xl font-bold text-gray-300">{page.title}</h2>
-                <p className="text-sm text-gray-600 mt-1">
-                  Last updated {formatDate(page.updated_at)}
-                </p>
               </div>
+            </CardHeader>
 
-              {/* Page Content */}
-              <div className="p-6">
+            {/* Page Content */}
+            <CardContent className="p-8">
+              <div className="prose prose-gray max-w-none dark:prose-invert">
                 <MarkdownRenderer
                   content={page.content || 'This page is empty.'}
                 />
               </div>
+            </CardContent>
 
-              {/* Child Pages */}
-              {page.children && page.children.length > 0 && (
-                <div className="border-t px-6 py-4">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                    Related Pages
-                  </h3>
-                  <div className="grid gap-3">
-                    {page.children.map((child) => (
-                      <a
-                        key={child.id}
-                        href={`/docs/${mod.slug}/${child.slug}`}
-                        className="block p-4 border rounded-lg hover:shadow-md transition-shadow hover:bg-gray-50"
-                      >
-                        <h4 className="font-medium text-gray-900 mb-1">
-                          {child.title}
-                        </h4>
-                        <p className="text-sm text-gray-600">
-                          {getMarkdownPreview(child.content || '', 150)}
-                        </p>
-                      </a>
-                    ))}
-                  </div>
-                </div>
-              )}
+            {/* Navigation Footer */}
+            <div className="border-t px-6 py-4">
+              <div className="flex items-center justify-between">
+                {prevPage ? (
+                  <Button variant="outline" asChild>
+                    <a href={`/docs/${mod.slug}/${prevPage.slug}`} className="flex items-center">
+                      <ChevronLeftIcon className="h-4 w-4 mr-2" />
+                      <div className="text-left">
+                        <div className="text-xs text-muted-foreground">Previous</div>
+                        <div className="font-medium">{prevPage.title}</div>
+                      </div>
+                    </a>
+                  </Button>
+                ) : (
+                  <div />
+                )}
+
+                {nextPage ? (
+                  <Button variant="outline" asChild>
+                    <a href={`/docs/${mod.slug}/${nextPage.slug}`} className="flex items-center">
+                      <div className="text-right">
+                        <div className="text-xs text-muted-foreground">Next</div>
+                        <div className="font-medium">{nextPage.title}</div>
+                      </div>
+                      <ChevronRightIcon className="h-4 w-4 ml-2" />
+                    </a>
+                  </Button>
+                ) : (
+                  <div />
+                )}
+              </div>
             </div>
-          </div>
+          </Card>
+
+          {/* Child Pages */}
+          {page.children && page.children.length > 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Related Pages</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid gap-4 md:grid-cols-2">
+                  {page.children.map((child) => (
+                    <Card key={child.id} className="hover:shadow-md transition-shadow">
+                      <CardContent className="p-4">
+                        <a
+                          href={`/docs/${mod.slug}/${child.slug}`}
+                          className="block group"
+                        >
+                          <h4 className="font-medium text-foreground group-hover:text-primary mb-2">
+                            {child.title}
+                          </h4>
+                          <p className="text-sm text-muted-foreground">
+                            {getMarkdownPreview(child.content || '', 120)}
+                          </p>
+                        </a>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
         </div>
       </div>
-
-      {/* Footer */}
-      <footer className="bg-gray-900 border-t mt-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="text-center text-sm text-gray-600">
-            <p>
-              Documentation for <strong>{mod.name}</strong> by {mod.owner.name}
-            </p>
-          </div>
-        </div>
-      </footer>
-    </div>
+    </PublicLayout>
   );
 }

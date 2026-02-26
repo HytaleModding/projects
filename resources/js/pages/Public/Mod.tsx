@@ -2,8 +2,10 @@ import { BookOpenIcon } from '@heroicons/react/24/outline';
 import { Head } from '@inertiajs/react';
 
 import MarkdownRenderer from '@/components/MarkdownRenderer';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import PublicLayout from '@/layouts/public-layout';
 import { getMarkdownPreview } from '@/utils/markdown';
 
 interface User {
@@ -48,23 +50,21 @@ export default function PublicMod({ mod }: Props) {
 
   const renderPageTree = (pages: Page[], level = 0) => {
     return pages.map((page) => (
-      <div key={page.id} className={`ml-${level * 4}`}>
-        <div className="py-2 px-3 hover:bg-gray-50 rounded-md">
-          <a
-            href={`/docs/${mod.slug}/${page.slug}`}
-            className="text-blue-600 hover:text-blue-800 flex items-center"
-          >
-            <BookOpenIcon className="h-4 w-4 text-gray-400 mr-2" />
-            {page.title}
-            {!page.published && (
-              <Badge variant="outline" className="ml-2 text-xs">
-                Draft
-              </Badge>
-            )}
-          </a>
-        </div>
+      <div key={page.id} className={`ml-${level * 3}`}>
+        <a
+          href={`/docs/${mod.slug}/${page.slug}`}
+          className="flex items-center py-2 px-3 text-sm rounded-md hover:bg-accent transition-colors group"
+        >
+          <BookOpenIcon className="h-4 w-4 text-muted-foreground mr-2 group-hover:text-foreground" />
+          <span className="text-foreground group-hover:text-accent-foreground">{page.title}</span>
+          {!page.published && (
+            <Badge variant="outline" className="ml-2 text-xs">
+              Draft
+            </Badge>
+          )}
+        </a>
         {page.children && page.children.length > 0 && (
-          <div className="ml-4">
+          <div className="ml-3 border-l border-border/50 pl-3">
             {renderPageTree(page.children, level + 1)}
           </div>
         )}
@@ -72,41 +72,42 @@ export default function PublicMod({ mod }: Props) {
     ));
   };
 
-
   return (
-    <div className="min-h-screen bg-gray-50">
+    <PublicLayout modName={mod.name} modSlug={mod.slug}>
       <Head title={`${mod.name} Documentation`} />
 
-      {/* Header */}
-      <header className="bg-white border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">{mod.name}</h1>
-              <p className="mt-2 text-gray-600">{mod.description}</p>
-              <div className="mt-4 flex items-center text-sm text-gray-500">
-                <span>Created by {mod.owner.name}</span>
-                <Badge className="ml-3 bg-green-100 text-green-800">
-                  Public Documentation
-                </Badge>
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <div className="lg:col-span-1">
+          <div className="sticky top-6 space-y-6">
+            <Card>
+              <CardHeader className="pb-4">
+                <CardTitle className="text-lg">About</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                <p className="text-sm text-muted-foreground">{mod.description}</p>
+                <div className="flex items-center space-x-2">
+                  <Avatar className="h-6 w-6">
+                    <AvatarFallback className="text-xs">
+                      {mod.owner.name.charAt(0).toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                  <span className="text-sm text-muted-foreground">
+                    by {mod.owner.name}
+                  </span>
+                </div>
+              </CardContent>
+            </Card>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          <div className="lg:col-span-1">
-            <Card className="sticky top-8">
-              <CardHeader>
+            {/* Navigation Card */}
+            <Card>
+              <CardHeader className="pb-4">
                 <CardTitle className="text-lg">Documentation</CardTitle>
               </CardHeader>
               <CardContent>
                 {mod.root_pages.length === 0 ? (
                   <div className="text-center py-8">
-                    <BookOpenIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                    <p className="text-gray-600">No pages available yet.</p>
+                    <BookOpenIcon className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                    <p className="text-sm text-muted-foreground">No pages available yet.</p>
                   </div>
                 ) : (
                   <nav className="space-y-1">
@@ -116,76 +117,70 @@ export default function PublicMod({ mod }: Props) {
               </CardContent>
             </Card>
           </div>
+        </div>
 
-          {/* Main Content */}
-          <div className="lg:col-span-3">
-            {mod.index_page ? (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <BookOpenIcon className="h-5 w-5 mr-2" />
-                    {mod.index_page.title}
-                  </CardTitle>
-                  <p className="text-sm text-gray-600 mt-2">
-                    Last updated {formatDate(mod.index_page.updated_at)}
+        {/* Main Content */}
+        <div className="lg:col-span-3">
+          {mod.index_page ? (
+            <Card>
+              <CardHeader>
+                <div className="flex items-center space-x-2">
+                  <BookOpenIcon className="h-5 w-5 text-primary" />
+                  <CardTitle className="text-xl">{mod.index_page.title}</CardTitle>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  Last updated {formatDate(mod.index_page.updated_at)}
+                </p>
+              </CardHeader>
+              <CardContent className="prose prose-gray max-w-none dark:prose-invert">
+                <MarkdownRenderer
+                  content={mod.index_page.content || ''}
+                />
+              </CardContent>
+            </Card>
+          ) : (
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-xl">Welcome to {mod.name}</CardTitle>
+                <p className="text-muted-foreground">{mod.description}</p>
+              </CardHeader>
+              <CardContent>
+                <div className="text-center py-12">
+                  <BookOpenIcon className="h-16 w-16 text-muted-foreground mx-auto mb-6" />
+                  <h3 className="text-lg font-semibold mb-2">
+                    Explore the Documentation
+                  </h3>
+                  <p className="text-muted-foreground mb-8 max-w-md mx-auto">
+                    Browse through the navigation on the left to explore the available documentation pages.
                   </p>
-                </CardHeader>
-                <CardContent>
-                  <MarkdownRenderer
-                    content={mod.index_page.content || ''}
-                  />
-                </CardContent>
-              </Card>
-            ) : (
-              <Card>
-                <CardHeader>
-                  <CardTitle>Welcome to {mod.name}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-center py-12">
-                    <BookOpenIcon className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                    <h3 className="text-lg font-medium text-gray-900 mb-2">
-                      Welcome to the documentation
-                    </h3>
-                    <p className="text-gray-600 mb-6">
-                      {mod.description || 'Browse the navigation on the left to explore the documentation.'}
-                    </p>
-                    {mod.root_pages.length > 0 && (
-                      <div className="grid gap-4 max-w-md mx-auto">
-                        {mod.root_pages.slice(0, 3).map((page) => (
-                          <a
-                            key={page.id}
-                            href={`/docs/${mod.slug}/${page.slug}`}
-                            className="block p-4 bg-blue-50 hover:bg-blue-100 rounded-lg border border-blue-200 transition-colors"
-                          >
-                            <h4 className="font-medium text-blue-900 mb-1">
-                              {page.title}
-                            </h4>
-                            <p className="text-sm text-blue-700">
-                              {getMarkdownPreview(page.content || '', 100)}
-                            </p>
-                          </a>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-          </div>
+                  {mod.root_pages.length > 0 && (
+                    <div className="grid gap-4 max-w-2xl mx-auto">
+                      <h4 className="font-semibold text-left mb-4">Featured Pages</h4>
+                      {mod.root_pages.slice(0, 3).map((page) => (
+                        <Card key={page.id} className="text-left hover:shadow-md transition-shadow">
+                          <CardContent className="p-4">
+                            <a
+                              href={`/docs/${mod.slug}/${page.slug}`}
+                              className="block group"
+                            >
+                              <h5 className="font-medium text-foreground group-hover:text-primary mb-2">
+                                {page.title}
+                              </h5>
+                              <p className="text-sm text-muted-foreground">
+                                {getMarkdownPreview(page.content || '', 120)}
+                              </p>
+                            </a>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          )}
         </div>
       </div>
-
-      {/* Footer */}
-      <footer className="bg-white border-t mt-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="text-center text-sm text-gray-600">
-            <p>
-              Documentation for <strong>{mod.name}</strong> by {mod.owner.name}
-            </p>
-          </div>
-        </div>
-      </footer>
-    </div>
+    </PublicLayout>
   );
 }

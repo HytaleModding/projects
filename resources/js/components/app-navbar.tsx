@@ -119,7 +119,6 @@ export default function AppNavbar() {
                         />
                     </div>
 
-                    {/* Mobile Search Toggle */}
                     <Button
                         variant="ghost"
                         size="icon"
@@ -129,15 +128,13 @@ export default function AppNavbar() {
                         <Search className="h-4 w-4" />
                     </Button>
 
-                    {/* Create New Mod Button */}
                     <Button asChild size="sm" className="hidden sm:flex">
                         <Link href="/mods/create">
-                            <Plus className="h-4 w-4 mr-2" />
+                            <Plus className="h-4 w-4" />
                             New Mod
                         </Link>
                     </Button>
 
-                    {/* User Menu */}
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button

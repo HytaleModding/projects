@@ -11,6 +11,7 @@ import MarkdownRenderer from '@/components/MarkdownRenderer';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { useFlashMessages } from '@/hooks/useFlashMessages';
 import AppLayout from '@/layouts/app-layout';
 
@@ -99,12 +100,12 @@ export default function ShowMod({ mod, userRole, canEdit, canManage }: Props) {
   const renderPageTree = (pages: Page[], level = 0) => {
     return pages.map((page) => (
       <div key={page.id} className={`ml-${level * 4}`}>
-        <div className="flex items-center justify-between py-2 px-3 hover:bg-gray-50 rounded-md">
+        <div className="flex items-center justify-between py-2 px-3 hover:bg-accent rounded-md group">
           <div className="flex items-center">
-            <BookOpenIcon className="h-4 w-4 text-gray-400 mr-2" />
+            <BookOpenIcon className="h-4 w-4 text-muted-foreground mr-2 group-hover:text-foreground" />
             <a
               href={`/mods/${mod.slug}/pages/${page.slug}`}
-              className="text-blue-600 hover:text-blue-800"
+              className="text-foreground hover:text-primary transition-colors"
             >
               {page.title}
             </a>
@@ -114,7 +115,7 @@ export default function ShowMod({ mod, userRole, canEdit, canManage }: Props) {
               </Badge>
             )}
           </div>
-          <div className="flex items-center space-x-1">
+          <div className="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
             <Button size="sm" variant="ghost" asChild>
               <a href={`/mods/${mod.slug}/pages/${page.slug}`}>
                 <EyeIcon className="h-3 w-3" />
@@ -130,7 +131,7 @@ export default function ShowMod({ mod, userRole, canEdit, canManage }: Props) {
           </div>
         </div>
         {page.children && page.children.length > 0 && (
-          <div className="ml-4">
+          <div className="ml-4 border-l border-border/50 pl-3">
             {renderPageTree(page.children, level + 1)}
           </div>
         )}
@@ -142,59 +143,56 @@ export default function ShowMod({ mod, userRole, canEdit, canManage }: Props) {
     <AppLayout>
       <Head title={mod.name} />
 
-      <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-start justify-between">
-            <div className="flex-1">
-              <div className="flex items-center space-x-3 mb-2">
-                <h1 className="text-3xl font-bold text-gray-900">{mod.name}</h1>
-                <Badge className={getVisibilityColor(mod.visibility)}>
-                  {mod.visibility}
+      <div className="space-y-6">
+        <div className="flex items-start justify-between">
+          <div className="flex-1">
+            <div className="flex items-center space-x-3 mb-2">
+              <h1 className="text-3xl font-bold tracking-tight">{mod.name}</h1>
+              <Badge className={getVisibilityColor(mod.visibility)}>
+                {mod.visibility}
+              </Badge>
+              {userRole && (
+                <Badge className={getRoleColor(userRole)}>
+                  {userRole}
                 </Badge>
-                {userRole && (
-                  <Badge className={getRoleColor(userRole)}>
-                    {userRole}
-                  </Badge>
-                )}
-              </div>
-              <p className="text-gray-600 mb-4">{mod.description}</p>
-              <div className="flex items-center text-sm text-gray-500">
-                <span>By {mod.owner.name}</span>
-                <span className="mx-2">•</span>
-                <span>{mod.collaborators.length} collaborators</span>
-                <span className="mx-2">•</span>
-                <span>
-                  {mod.storage_driver === 's3' ? 'S3 Storage' : 'Local Storage'}
-                </span>
-              </div>
-            </div>
-            <div className="flex space-x-3">
-              {mod.visibility === 'public' && (
-                <Button variant="outline" asChild>
-                  <a href={`/docs/${mod.slug}`} target="_blank">
-                    <EyeIcon className="h-4 w-4 mr-2" />
-                    View Public
-                  </a>
-                </Button>
-              )}
-              {canEdit && (
-                <Button asChild>
-                  <a href={`/mods/${mod.slug}/pages/create`}>
-                    <PlusIcon className="h-4 w-4 mr-2" />
-                    New Page
-                  </a>
-                </Button>
-              )}
-              {canManage && (
-                <Button variant="outline" asChild>
-                  <a href={`/mods/${mod.slug}/edit`}>
-                    <CogIcon className="h-4 w-4 mr-2" />
-                    Settings
-                  </a>
-                </Button>
               )}
             </div>
+            <p className="text-muted-foreground mb-4">{mod.description}</p>
+            <div className="flex items-center text-sm text-muted-foreground">
+              <span>By {mod.owner.name}</span>
+              <span className="mx-2">•</span>
+              <span>{mod.collaborators.length} collaborators</span>
+              <span className="mx-2">•</span>
+              <span>
+                {mod.storage_driver === 's3' ? 'S3 Storage' : 'Local Storage'}
+              </span>
+            </div>
+          </div>
+          <div className="flex space-x-3">
+            {mod.visibility === 'public' && (
+              <Button variant="outline" asChild>
+                <a href={`/docs/${mod.slug}`} target="_blank">
+                  <EyeIcon className="h-4 w-4 mr-2" />
+                  View Public
+                </a>
+              </Button>
+            )}
+            {canEdit && (
+              <Button asChild>
+                <a href={`/mods/${mod.slug}/pages/create`}>
+                  <PlusIcon className="h-4 w-4 mr-2" />
+                  New Page
+                </a>
+              </Button>
+            )}
+            {canManage && (
+              <Button variant="outline" asChild>
+                <a href={`/mods/${mod.slug}/edit`}>
+                  <CogIcon className="h-4 w-4 mr-2" />
+                  Settings
+                </a>
+              </Button>
+            )}
           </div>
         </div>
 
@@ -206,7 +204,7 @@ export default function ShowMod({ mod, userRole, canEdit, canManage }: Props) {
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center">
-                    <BookOpenIcon className="h-5 w-5 mr-2" />
+                    <BookOpenIcon className="h-5 w-5 mr-2 text-primary" />
                     {mod.index_page.title}
                   </CardTitle>
                 </CardHeader>
@@ -215,7 +213,7 @@ export default function ShowMod({ mod, userRole, canEdit, canManage }: Props) {
                     content={mod.index_page.content || ''}
                   />
                   <div className="mt-4 flex items-center justify-between">
-                    <span className="text-sm text-gray-500">
+                    <span className="text-sm text-muted-foreground">
                       Updated {formatDate(mod.index_page.updated_at)}
                     </span>
                     <Button variant="outline" size="sm" asChild>
@@ -246,11 +244,11 @@ export default function ShowMod({ mod, userRole, canEdit, canManage }: Props) {
               <CardContent>
                 {mod.root_pages.length === 0 ? (
                   <div className="text-center py-8">
-                    <BookOpenIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                    <h3 className="text-lg font-medium text-gray-900 mb-2">
+                    <BookOpenIcon className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                    <h3 className="text-lg font-medium mb-2">
                       No pages yet
                     </h3>
-                    <p className="text-gray-600 mb-4">
+                    <p className="text-muted-foreground mb-4">
                       Start documenting your mod by creating your first page
                     </p>
                     {canEdit && (
@@ -322,16 +320,14 @@ export default function ShowMod({ mod, userRole, canEdit, canManage }: Props) {
                     {/* Owner */}
                     <div className="flex items-center justify-between">
                       <div className="flex items-center">
-                        <div className="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center">
-                          <span className="text-sm font-medium text-purple-800">
-                            {mod.owner.name.charAt(0)}
-                          </span>
-                        </div>
+                        <Avatar className="h-8 w-8">
+                          <AvatarFallback className="bg-purple-100 text-purple-800 font-medium">
+                            {mod.owner.name.charAt(0).toUpperCase()}
+                          </AvatarFallback>
+                        </Avatar>
                         <div className="ml-3">
-                          <p className="text-sm font-medium text-gray-900">
-                            {mod.owner.name}
-                          </p>
-                          <p className="text-xs text-gray-500">@{mod.owner.username}</p>
+                          <p className="text-sm font-medium">{mod.owner.name}</p>
+                          <p className="text-xs text-muted-foreground">@{mod.owner.username}</p>
                         </div>
                       </div>
                       <Badge className={getRoleColor('owner')}>Owner</Badge>
@@ -341,16 +337,14 @@ export default function ShowMod({ mod, userRole, canEdit, canManage }: Props) {
                     {mod.collaborators.map((collaborator) => (
                       <div key={collaborator.id} className="flex items-center justify-between">
                         <div className="flex items-center">
-                          <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
-                            <span className="text-sm font-medium text-gray-800">
-                              {collaborator.name.charAt(0)}
-                            </span>
-                          </div>
+                          <Avatar className="h-8 w-8">
+                            <AvatarFallback className="bg-muted font-medium">
+                              {collaborator.name.charAt(0).toUpperCase()}
+                            </AvatarFallback>
+                          </Avatar>
                           <div className="ml-3">
-                            <p className="text-sm font-medium text-gray-900">
-                              {collaborator.name}
-                            </p>
-                            <p className="text-xs text-gray-500">@{collaborator.username}</p>
+                            <p className="text-sm font-medium">{collaborator.name}</p>
+                            <p className="text-xs text-muted-foreground">@{collaborator.username}</p>
                           </div>
                         </div>
                         <Badge className={getRoleColor(collaborator.pivot.role)}>
@@ -360,7 +354,7 @@ export default function ShowMod({ mod, userRole, canEdit, canManage }: Props) {
                     ))}
 
                     {mod.collaborators.length === 0 && (
-                      <p className="text-sm text-gray-500 text-center py-4">
+                      <p className="text-sm text-muted-foreground text-center py-4">
                         No collaborators yet
                       </p>
                     )}
