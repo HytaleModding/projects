@@ -9,7 +9,7 @@ export default function AppNavbarLayout({
   breadcrumbs = [],
 }: AppLayoutProps) {
   return (
-    <div className="flex min-h-screen flex-col bg-background">
+    <div className="flex min-h-screen flex-col bg-background font-sans">
       <AppNavbar />
       <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-6">
         {breadcrumbs && breadcrumbs.length > 0 && (

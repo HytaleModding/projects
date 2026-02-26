@@ -33,7 +33,15 @@ interface Props {
 export default function Dashboard({ stats }: Props) {
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
-      <Head title="Dashboard" />
+      <Head title="Dashboard">
+        {/* don't freak out, it's downloading at build time. not reliant on google */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap"
+          rel="stylesheet"
+        />
+      </Head>
       <div className="flex flex-col gap-6">
         <div className="flex items-center justify-between">
           <div>
