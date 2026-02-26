@@ -60,7 +60,7 @@ export default function PublicPage({ mod, page, navigation }: Props) {
           className={`block py-1 px-2 text-sm rounded hover:bg-gray-100 ${
             navPage.id === page.id
               ? 'bg-blue-50 text-blue-700 font-medium'
-              : 'text-gray-700'
+              : 'text-gray-300'
           }`}
         >
           {navPage.title}
@@ -75,11 +75,11 @@ export default function PublicPage({ mod, page, navigation }: Props) {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-900">
       <Head title={`${page.title} - ${mod.name} Documentation`} />
 
       {/* Header */}
-      <header className="bg-white border-b">
+      <header className="bg-gray-600 text-white border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
             <div>
@@ -88,7 +88,7 @@ export default function PublicPage({ mod, page, navigation }: Props) {
                   {mod.name}
                 </a>
               </h1>
-              <p className="mt-1 text-gray-600">{mod.description}</p>
+              <p className="mt-1 text-gray-200">{mod.description}</p>
             </div>
             <Badge className="bg-green-100 text-green-800">
               Public Documentation
@@ -101,8 +101,8 @@ export default function PublicPage({ mod, page, navigation }: Props) {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Sidebar Navigation */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-lg shadow-sm border p-6 sticky top-8">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Documentation</h3>
+            <div className="bg-gray-900 rounded-lg shadow-sm border p-6 sticky top-8">
+              <h3 className="text-lg font-semibold text-gray-300 mb-4">Documentation</h3>
               {navigation.length === 0 ? (
                 <div className="text-center py-4">
                   <BookOpenIcon className="h-8 w-8 text-gray-400 mx-auto mb-2" />
@@ -118,10 +118,10 @@ export default function PublicPage({ mod, page, navigation }: Props) {
 
           {/* Main Content */}
           <div className="lg:col-span-3">
-            <div className="bg-white rounded-lg shadow-sm border">
+            <div className="bg-gray-900 rounded-lg shadow-sm border">
               {/* Page Header */}
               <div className="border-b px-6 py-4">
-                <h2 className="text-2xl font-bold text-gray-900">{page.title}</h2>
+                <h2 className="text-2xl font-bold text-gray-300">{page.title}</h2>
                 <p className="text-sm text-gray-600 mt-1">
                   Last updated {formatDate(page.updated_at)}
                 </p>
@@ -164,7 +164,7 @@ export default function PublicPage({ mod, page, navigation }: Props) {
       </div>
 
       {/* Footer */}
-      <footer className="bg-white border-t mt-16">
+      <footer className="bg-gray-900 border-t mt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="text-center text-sm text-gray-600">
             <p>
