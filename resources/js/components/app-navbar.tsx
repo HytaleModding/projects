@@ -48,16 +48,6 @@ const mainNavItems = [
         href: dashboard().url,
         icon: LayoutGrid,
     },
-    {
-        title: 'Mods',
-        href: modsIndex().url,
-        icon: BookOpen,
-    },
-    {
-        title: 'Documentation',
-        href: '/docs',
-        icon: FileText,
-    },
 ];
 
 export default function AppNavbar() {
