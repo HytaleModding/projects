@@ -1,7 +1,6 @@
 import { PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { Head, useForm } from '@inertiajs/react';
 import { DownloadIcon, UploadIcon, FileIcon } from 'lucide-react';
-import { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -36,23 +35,18 @@ interface Props {
 }
 
 export default function FilesIndex({ mod, files, canEdit }: Props) {
-  const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
-
-  const { post, processing } = useForm();
+  const { data, setData, post, processing } = useForm<{ files: globalThis.File[] }>({
+    files: [],
+  });
 
   const handleFileUpload = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedFiles) return;
-
-    const formData = new FormData();
-    Array.from(selectedFiles).forEach(file => {
-      formData.append('files[]', file);
-    });
+    if (!data.files.length) return;
 
     post(`/mods/${mod.slug}/files`, {
-      data: formData,
+      forceFormData: true,
       onSuccess: () => {
-        setSelectedFiles(null);
+        setData('files', []);
         const input = document.getElementById('file-upload') as HTMLInputElement;
         if (input) input.value = '';
       },
@@ -140,14 +134,14 @@ export default function FilesIndex({ mod, files, canEdit }: Props) {
                     id="file-upload"
                     type="file"
                     multiple
-                    onChange={(e) => setSelectedFiles(e.target.files)}
+                    onChange={(e) => setData('files', Array.from(e.target.files ?? []))}
                     className="mt-1"
                   />
                   <p className="text-sm text-gray-600 mt-1">
                     Maximum file size: 10MB. Supported formats: Images, PDFs, Archives, Documents
                   </p>
                 </div>
-                <Button type="submit" disabled={!selectedFiles || processing}>
+                <Button type="submit" disabled={!data.files.length || processing}>
                   <UploadIcon className="h-4 w-4 mr-2" />
                   {processing ? 'Uploading...' : 'Upload Files'}
                 </Button>

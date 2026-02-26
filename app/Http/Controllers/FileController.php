@@ -7,6 +7,7 @@ use App\Models\Mod;
 use App\Models\Page;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
@@ -62,11 +63,11 @@ class FileController extends Controller
     public function store(Request $request, Mod $mod)
     {
         $user = Auth::user();
+        Log::debug("got the thing");
 
         if (!$mod->userCan($user, 'edit')) {
             abort(403);
         }
-
         $request->validate([
             'files' => 'required|array|min:1',
             'files.*' => 'file|max:10240|mimes:jpeg,png,gif,webp,pdf,txt,md,doc,docx,zip,rar', // 10MB max
