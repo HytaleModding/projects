@@ -3,8 +3,8 @@
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\ModController;
 use App\Http\Controllers\PageController;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
 
@@ -21,6 +21,16 @@ Route::get('dashboard', function () {
     $collaborativeModsCount = $user->mods()->count();
     $totalPagesCount = $user->ownedMods()->withCount('pages')->get()->sum('pages_count') +
                       $user->mods()->withCount('pages')->get()->sum('pages_count');
+    $latestPages = $user->ownedMods()->with(['pages' => function ($query) {
+        $query->latest()->limit(5);
+    }])->get()->pluck('pages')->flatten()->merge(
+        $user->mods()->with(['pages' => function ($query) {
+            $query->latest()->limit(5);
+        }])->get()->pluck('pages')->flatten()
+    )->sortByDesc('created_at')->take(5);
+    $latestMods = $user->ownedMods()->latest()->limit(5)->get()->merge(
+        $user->mods()->latest()->limit(5)->get()
+    )->sortByDesc('created_at')->take(5);
 
     return Inertia::render('dashboard', [
         'stats' => [
@@ -28,7 +38,9 @@ Route::get('dashboard', function () {
             'collaborativeModsCount' => $collaborativeModsCount,
             'totalPagesCount' => $totalPagesCount,
             'publicViewsCount' => 0,
-        ]
+            'latestPages' => $latestPages,
+            'latestMods' => $latestMods
+        ],
     ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
