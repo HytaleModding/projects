@@ -25,6 +25,62 @@
   padding: 1rem 1.25rem;
 }
 
+/* Markdown heading anchor links styling */
+.prose .heading-container {
+  position: relative;
+}
+
+.prose .heading-with-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  scroll-margin-top: 5rem; /* Account for fixed headers */
+}
+
+.prose .heading-anchor {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  border: none;
+  background: none;
+}
+
+.prose .heading-anchor:hover {
+  text-decoration: none;
+}
+
+.prose .copy-heading-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: none;
+  background: none;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.prose .copy-heading-btn:hover {
+  transform: scale(1.1);
+}
+
+.prose .copy-heading-btn:focus {
+  outline: 2px solid var(--color-ring);
+  outline-offset: 2px;
+}
+
+/* Ensure heading links work well with prose styles */
+.prose .heading-container h1,
+.prose .heading-container h2,
+.prose .heading-container h3,
+.prose .heading-container h4,
+.prose .heading-container h5,
+.prose .heading-container h6 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
 @theme {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
