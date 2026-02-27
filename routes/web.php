@@ -32,38 +32,38 @@ Route::get('dashboard', function () {
     ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/docs/{mod:slug}', [ModController::class, 'publicShow'])->name('public.mod');
-Route::get('/docs/{mod:slug}/{page:slug}', [PageController::class, 'publicShow'])->name('public.page');
+Route::get('/{mod:slug}', [ModController::class, 'publicShow'])->name('public.mod');
+Route::get('/{mod:slug}/{page:slug}', [PageController::class, 'publicShow'])->name('public.page');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::resource('mods', ModController::class)->except(['show']);
-    Route::get('mods/{mod:slug}', [ModController::class, 'show'])->name('mods.show');
+    Route::resource('dashboard/mods', ModController::class)->except(['show']);
+    Route::get('dashboard/mods/{mod:slug}', [ModController::class, 'show'])->name('mods.show');
 
-    Route::get('mods/{mod:slug}/collaborators', [ModController::class, 'manageCollaborators'])->name('mods.collaborators.index');
-    Route::post('mods/{mod:slug}/collaborators', [ModController::class, 'addCollaborator'])->name('mods.collaborators.store');
-    Route::delete('mods/{mod:slug}/collaborators/{collaborator}', [ModController::class, 'removeCollaborator'])->name('mods.collaborators.destroy');
-    Route::patch('mods/{mod:slug}/collaborators/{collaborator}', [ModController::class, 'updateCollaboratorRole'])->name('mods.collaborators.update');
+    Route::get('dashboard/mods/{mod:slug}/collaborators', [ModController::class, 'manageCollaborators'])->name('mods.collaborators.index');
+    Route::post('dashboard/mods/{mod:slug}/collaborators', [ModController::class, 'addCollaborator'])->name('mods.collaborators.store');
+    Route::delete('dashboard/mods/{mod:slug}/collaborators/{collaborator}', [ModController::class, 'removeCollaborator'])->name('mods.collaborators.destroy');
+    Route::patch('dashboard/mods/{mod:slug}/collaborators/{collaborator}', [ModController::class, 'updateCollaboratorRole'])->name('mods.collaborators.update');
 
-    Route::get('mods/{mod:slug}/pages', [PageController::class, 'index'])->name('pages.index');
-    Route::get('mods/{mod:slug}/pages/create', [PageController::class, 'create'])->name('pages.create');
-    Route::post('mods/{mod:slug}/pages', [PageController::class, 'store'])->name('pages.store');
-    Route::get('mods/{mod:slug}/pages/{page:slug}', [PageController::class, 'show'])->name('pages.show');
-    Route::get('mods/{mod:slug}/pages/{page:slug}/edit', [PageController::class, 'edit'])->name('pages.edit');
-    Route::patch('mods/{mod:slug}/pages/{page:slug}', [PageController::class, 'update'])->name('pages.update');
-    Route::delete('mods/{mod:slug}/pages/{page:slug}', [PageController::class, 'destroy'])->name('pages.destroy');
+    Route::get('dashboard/mods/{mod:slug}/pages', [PageController::class, 'index'])->name('pages.index');
+    Route::get('dashboard/mods/{mod:slug}/pages/create', [PageController::class, 'create'])->name('pages.create');
+    Route::post('dashboard/mods/{mod:slug}/pages', [PageController::class, 'store'])->name('pages.store');
+    Route::get('dashboard/mods/{mod:slug}/pages/{page:slug}', [PageController::class, 'show'])->name('pages.show');
+    Route::get('dashboard/mods/{mod:slug}/pages/{page:slug}/edit', [PageController::class, 'edit'])->name('pages.edit');
+    Route::patch('dashboard/mods/{mod:slug}/pages/{page:slug}', [PageController::class, 'update'])->name('pages.update');
+    Route::delete('dashboard/mods/{mod:slug}/pages/{page:slug}', [PageController::class, 'destroy'])->name('pages.destroy');
 
-    Route::post('mods/{mod:slug}/pages/reorder', [PageController::class, 'updateOrder'])->name('pages.reorder');
-    Route::post('mods/{mod:slug}/pages/{page:slug}/autosave', [PageController::class, 'autoSave'])->name('pages.autosave');
-    Route::get('mods/{mod:slug}/pages/search', [PageController::class, 'search'])->name('pages.search');
+    Route::post('dashboard/mods/{mod:slug}/pages/reorder', [PageController::class, 'updateOrder'])->name('pages.reorder');
+    Route::post('dashboard/mods/{mod:slug}/pages/{page:slug}/autosave', [PageController::class, 'autoSave'])->name('pages.autosave');
+    Route::get('dashboard/mods/{mod:slug}/pages/search', [PageController::class, 'search'])->name('pages.search');
 
-    Route::get('mods/{mod:slug}/files', [FileController::class, 'index'])->name('files.index');
-    Route::post('mods/{mod:slug}/files', [FileController::class, 'store'])->name('files.store');
-    Route::get('mods/{mod:slug}/files/{file}', [FileController::class, 'show'])->name('files.show');
-    Route::delete('mods/{mod:slug}/files/{file}', [FileController::class, 'destroy'])->name('files.destroy');
-    Route::get('mods/{mod:slug}/files/{file}/download', [FileController::class, 'download'])->name('files.download');
+    Route::get('dashboard/mods/{mod:slug}/files', [FileController::class, 'index'])->name('files.index');
+    Route::post('dashboard/mods/{mod:slug}/files', [FileController::class, 'store'])->name('files.store');
+    Route::get('dashboard/mods/{mod:slug}/files/{file}', [FileController::class, 'show'])->name('files.show');
+    Route::delete('dashboard/mods/{mod:slug}/files/{file}', [FileController::class, 'destroy'])->name('files.destroy');
+    Route::get('dashboard/mods/{mod:slug}/files/{file}/download', [FileController::class, 'download'])->name('files.download');
 
-    Route::post('mods/{mod:slug}/files/quick-upload', [FileController::class, 'quickUpload'])->name('files.quick-upload');
-    Route::get('mods/{mod:slug}/pages/{page:slug}/files', [FileController::class, 'getPageFiles'])->name('files.page');
+    Route::post('dashboard/mods/{mod:slug}/files/quick-upload', [FileController::class, 'quickUpload'])->name('files.quick-upload');
+    Route::get('dashboard/mods/{mod:slug}/pages/{page:slug}/files', [FileController::class, 'getPageFiles'])->name('files.page');
 });
 
 Route::get('invitations/{token}', [ModController::class, 'showInvitation'])->name('invitations.show');
