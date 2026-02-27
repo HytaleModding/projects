@@ -36,3 +36,6 @@ jobs:
 
       - name: Lint Frontend
         run: bun run lint:check
+
+      - name: Type Check Frontend
+        run: bun run types
