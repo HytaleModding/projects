@@ -92,7 +92,7 @@ class FileController extends Controller
 
             $path = "mods/{$mod->id}/files/{$filename}";
 
-            $disk = $mod->storage_driver === 's3' ? 's3' : 'public';
+            $disk = 'public';
             $uploadedFile->storeAs("mods/{$mod->id}/files", $filename, $disk);
 
             $file = File::create([
@@ -103,15 +103,10 @@ class FileController extends Controller
                 'path' => $path,
                 'mime_type' => $uploadedFile->getMimeType(),
                 'size' => $uploadedFile->getSize(),
-                'storage_driver' => $mod->storage_driver, // Keep original driver name
+                'storage_driver' => "local", // hard coded local for now
                 'uploaded_by' => $user->id,
             ]);
-
-            if ($mod->storage_driver === 's3') {
-                $url = Storage::disk('s3')->url($path);
-            } else {
-                $url = Storage::disk('public')->url($path);
-            }
+            $url = Storage::disk('public')->url($path);
 
             $file->update(['url' => $url]);
 
@@ -173,7 +168,7 @@ class FileController extends Controller
             abort(403);
         }
 
-        $disk = $file->storage_driver === 's3' ? 's3' : 'public';
+        $disk = 'public';
 
         if (!Storage::disk($disk)->exists($file->path)) {
             abort(404, 'File not found on storage.');
@@ -238,7 +233,7 @@ class FileController extends Controller
         $filename = Str::uuid() . '.' . $extension;
 
         $path = "mods/{$mod->id}/files/{$filename}";
-        $disk = $mod->storage_driver === 's3' ? 's3' : 'public';
+        $disk = 'public';
         $uploadedFile->storeAs("mods/{$mod->id}/files", $filename, $disk);
 
         $file = File::create([
@@ -252,12 +247,7 @@ class FileController extends Controller
             'uploaded_by' => $user->id,
         ]);
 
-        if ($mod->storage_driver === 's3') {
-            $url = Storage::disk('s3')->url($path);
-        } else {
-            $url = Storage::disk('public')->url($path);
-        }
-
+        $url = Storage::disk('public')->url($path);
         $file->update(['url' => $url]);
 
         return response()->json([
