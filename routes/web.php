@@ -58,6 +58,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('mods/{mod:slug}/pages', [PageController::class, 'index'])->name('pages.index');
     Route::get('mods/{mod:slug}/pages/create', [PageController::class, 'create'])->name('pages.create');
+    Route::get('mods/{mod:slug}/pages/search', [PageController::class, 'search'])->name('pages.search');
     Route::post('mods/{mod:slug}/pages', [PageController::class, 'store'])->name('pages.store');
     Route::get('mods/{mod:slug}/pages/{page:slug}', [PageController::class, 'show'])->name('pages.show');
     Route::get('mods/{mod:slug}/pages/{page:slug}/edit', [PageController::class, 'edit'])->name('pages.edit');
@@ -66,7 +67,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::post('mods/{mod:slug}/pages/reorder', [PageController::class, 'updateOrder'])->name('pages.reorder');
     Route::post('mods/{mod:slug}/pages/{page:slug}/autosave', [PageController::class, 'autoSave'])->name('pages.autosave');
-    Route::get('mods/{mod:slug}/pages/search', [PageController::class, 'search'])->name('pages.search');
 
     Route::get('mods/{mod:slug}/files', [FileController::class, 'index'])->name('files.index');
     Route::post('mods/{mod:slug}/files', [FileController::class, 'store'])->name('files.store');

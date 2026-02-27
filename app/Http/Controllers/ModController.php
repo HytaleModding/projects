@@ -217,18 +217,24 @@ class ModController extends Controller
         }
 
         $validated = $request->validate([
-            'username' => 'required|string|exists:users,username',
+            'username' => 'required|string',
             'role' => 'required|in:admin,editor,viewer',
         ]);
 
-        $collaborator = User::where('username', $validated['username'])->firstOrFail();
+        $collaborator = User::where('username', $validated['username'])
+            ->orWhere('email', $validated['username'])
+            ->first();
+
+        if (!$collaborator) {
+            return back()->withErrors(['email' => 'User not found.']);
+        }
 
         if ($mod->collaborators()->where('user_id', $collaborator->id)->exists()) {
-            return back()->withErrors(['username' => 'User is already a collaborator.']);
+            return back()->withErrors(['email' => 'User is already a collaborator.']);
         }
 
         if ($mod->owner_id === $collaborator->id) {
-            return back()->withErrors(['username' => 'Owner cannot be added as collaborator.']);
+            return back()->withErrors(['email' => 'Owner cannot be added as collaborator.']);
         }
 
         $existingInvitation = ModInvitation::where('mod_id', $mod->id)
@@ -238,11 +244,17 @@ class ModController extends Controller
             ->first();
 
         if ($existingInvitation) {
-            return back()->withErrors(['username' => 'User already has a pending invitation.']);
+            return back()->withErrors(['email' => 'User already has a pending invitation.']);
         }
 
-        $invitation = ModInvitation::createInvitation($mod, $collaborator, $user, $validated['role']);
+        // Add collaborator directly to mod_users table
+        $mod->collaborators()->attach($collaborator->id, [
+            'role' => $validated['role'],
+            'invited_by' => $user->id
+        ]);
 
+        // Also create and send invitation email
+        $invitation = ModInvitation::createInvitation($mod, $collaborator, $user, $validated['role']);
         $inviteUrl = route('invitations.show', ['token' => $invitation->token]);
 
         try {
@@ -256,8 +268,7 @@ class ModController extends Controller
 
             return back()->with('success', "Invitation sent to {$collaborator->name}!");
         } catch (\Exception $e) {
-            $invitation->delete();
-            return back()->withErrors(['email' => 'Failed to send invitation email. Please try again.']);
+            return back()->with('success', "Collaborator added successfully! (Email notification failed to send)");
         }
     }
 
@@ -268,7 +279,21 @@ class ModController extends Controller
     {
         $user = Auth::user();
 
+        // Allow users to remove themselves
+        if ($user->id === $collaborator->id) {
+            $mod->collaborators()->detach($collaborator->id);
+            return back()->with('success', 'You have left the mod successfully!');
+        }
+
         if (!$mod->userCan($user, 'manage_collaborators')) {
+            abort(403);
+        }
+
+        $currentUserRole = $mod->getUserRole($user);
+        $targetUserRole = $mod->getUserRole($collaborator);
+
+        // Admins cannot remove other admins (only owners can)
+        if ($currentUserRole === 'admin' && $targetUserRole === 'admin') {
             abort(403);
         }
 
@@ -291,6 +316,14 @@ class ModController extends Controller
         $validated = $request->validate([
             'role' => 'required|in:admin,editor,viewer',
         ]);
+
+        $currentUserRole = $mod->getUserRole($user);
+        $targetRole = $validated['role'];
+
+        // Only owners can promote to admin
+        if ($targetRole === 'admin' && $currentUserRole !== 'owner') {
+            abort(403);
+        }
 
         $mod->collaborators()->updateExistingPivot($collaborator->id, [
             'role' => $validated['role']
