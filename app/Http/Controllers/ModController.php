@@ -246,13 +246,6 @@ class ModController extends Controller
             return back()->withErrors(['email' => 'User already has a pending invitation.']);
         }
 
-        // Add collaborator directly to mod_users table
-        $mod->collaborators()->attach($collaborator->id, [
-            'role' => $validated['role'],
-            'invited_by' => $user->id,
-        ]);
-
-        // Also create and send invitation email
         $invitation = ModInvitation::createInvitation($mod, $collaborator, $user, $validated['role']);
         $inviteUrl = route('invitations.show', ['token' => $invitation->token]);
 
@@ -267,7 +260,7 @@ class ModController extends Controller
 
             return back()->with('success', "Invitation sent to {$collaborator->name}!");
         } catch (\Exception $e) {
-            return back()->with('success', 'Collaborator added successfully! (Email notification failed to send)');
+            return back()->withErrors(["Failed to send invitation email: {$e->getMessage()}"]);
         }
     }
 
@@ -416,7 +409,7 @@ class ModController extends Controller
             ]);
         }
 
-        return Inertia::render('Invitations/Accept', [
+        return Inertia::render('Invitations/Show', [
             'invitation' => $invitation,
         ]);
     }
@@ -454,5 +447,40 @@ class ModController extends Controller
 
         return redirect()->route('invitations.show', $token)
             ->with('error', 'Failed to accept invitation. Please try again.');
+    }
+
+    /**
+     * Rejet an invitation.
+     */
+    public function rejectInvitation(string $token)
+    {
+        $user = Auth::user();
+
+        $invitation = ModInvitation::with(['mod', 'user'])
+            ->where('token', $token)
+            ->firstOrFail();
+
+        if (! $user || $user->id !== $invitation->user_id) {
+            return redirect()->route('login')
+                ->with('error', 'Please login to reject this invitation.');
+        }
+
+        if ($invitation->isExpired()) {
+            return redirect()->route('invitations.show', $token)
+                ->with('error', 'This invitation has expired.');
+        }
+
+        if ($invitation->isAccepted()) {
+            return redirect()->route('mods.show', $invitation->mod->slug)
+                ->with('success', 'You are already a collaborator on this mod!');
+        }
+
+        if ($invitation->reject()) {
+            return redirect()->route('mods.index')
+                ->with('success', "You have rejected the invitation to {$invitation->mod->name}.");
+        }
+
+        return redirect()->route('invitations.show', $token)
+            ->with('error', 'Failed to reject invitation. Please try again.');
     }
 }

@@ -72,6 +72,17 @@ class ModInvitation extends Model
         return true;
     }
 
+    public function reject(): bool
+    {
+        if ($this->isExpired() || $this->isAccepted()) {
+            return false;
+        }
+
+        $this->delete();
+
+        return true;
+    }
+
     public static function generateToken(): string
     {
         return Str::random(64);

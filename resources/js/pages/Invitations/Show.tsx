@@ -52,6 +52,10 @@ export default function AcceptInvitation({ invitation }: Props) {
     post(`/invitations/${invitation.token}/accept`);
   };
 
+  const handleReject = () => {
+    post(`/invitations/${invitation.token}/reject`);
+  }
+
   const getRoleColor = (role: string) => {
     switch (role) {
       case 'admin':
@@ -153,8 +157,8 @@ export default function AcceptInvitation({ invitation }: Props) {
                   {processing ? 'Accepting...' : 'Accept Invitation'}
                 </Button>
 
-                <Button variant="outline" asChild className="w-full" size="lg">
-                  <Link href="/dashboard">Maybe Later</Link>
+                <Button onClick={handleReject} disabled={processing} className="w-full" size="lg">
+                  { processing ? 'Rejecting...' : <span>Reject Invitation</span> }
                 </Button>
               </div>
 

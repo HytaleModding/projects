@@ -80,5 +80,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 Route::get('invitations/{token}', [ModController::class, 'showInvitation'])->name('invitations.show');
 Route::post('invitations/{token}/accept', [ModController::class, 'acceptInvitation'])->name('invitations.accept')->middleware('auth');
+Route::post('invitations/{token}/reject', [ModController::class, 'rejectInvitation'])->name('invitations.reject')->middleware('auth');
 
 require __DIR__.'/settings.php';
