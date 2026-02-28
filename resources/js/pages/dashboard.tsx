@@ -1,7 +1,6 @@
 import { Head, Link } from '@inertiajs/react';
 import { usePage } from '@inertiajs/react';
 import {
-  BookOpen,
   Plus,
   Users,
   FileText,
@@ -9,7 +8,6 @@ import {
   Settings,
   HelpCircle,
   TrendingUp,
-  UserPlus,
   EyeIcon,
 } from 'lucide-react';
 import { useState } from 'react';
