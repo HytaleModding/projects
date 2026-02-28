@@ -63,7 +63,7 @@ export default function PublicPage({ mod, page, navigation }: Props) {
     return pages.map((navPage) => (
       <div key={navPage.id} className={`ml-${level * 3}`}>
         <a
-          href={`/docs/${mod.slug}/${navPage.slug}`}
+          href={`/mod/${mod.slug}/${navPage.slug}`}
           className={`group flex items-center rounded-md px-3 py-2 text-sm transition-colors ${
             navPage.id === page.id
               ? 'bg-accent font-medium text-accent-foreground'
@@ -101,7 +101,7 @@ export default function PublicPage({ mod, page, navigation }: Props) {
     currentIndex < allPages.length - 1 ? allPages[currentIndex + 1] : null;
 
   const breadcrumbs = [
-    { title: page.title, href: `/docs/${mod.slug}/${page.slug}` },
+    { title: page.title, href: `/mod/${mod.slug}/${page.slug}` },
   ];
 
   return (
@@ -119,7 +119,7 @@ export default function PublicPage({ mod, page, navigation }: Props) {
               <CardHeader className="pb-4">
                 <CardTitle className="text-lg">
                   <a
-                    href={`/docs/${mod.slug}`}
+                    href={`/mod/${mod.slug}`}
                     className="transition-colors hover:text-primary"
                   >
                     {mod.name}
@@ -190,7 +190,7 @@ export default function PublicPage({ mod, page, navigation }: Props) {
                 {prevPage ? (
                   <Button variant="outline" asChild>
                     <a
-                      href={`/docs/${mod.slug}/${prevPage.slug}`}
+                      href={`/mod/${mod.slug}/${prevPage.slug}`}
                       className="flex items-center"
                     >
                       <ChevronLeftIcon className="mr-2 h-4 w-4" />
@@ -209,7 +209,7 @@ export default function PublicPage({ mod, page, navigation }: Props) {
                 {nextPage ? (
                   <Button variant="outline" asChild>
                     <a
-                      href={`/docs/${mod.slug}/${nextPage.slug}`}
+                      href={`/mod/${mod.slug}/${nextPage.slug}`}
                       className="flex items-center"
                     >
                       <div className="text-right">
@@ -243,7 +243,7 @@ export default function PublicPage({ mod, page, navigation }: Props) {
                     >
                       <CardContent className="p-4">
                         <a
-                          href={`/docs/${mod.slug}/${child.slug}`}
+                          href={`/mod/${mod.slug}/${child.slug}`}
                           className="group block"
                         >
                           <h4 className="mb-2 font-medium text-foreground group-hover:text-primary">

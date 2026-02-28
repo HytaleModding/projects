@@ -113,7 +113,7 @@ export default function ExpiredInvitation({ invitation }: Props) {
                 </Button>
 
                 <Button variant="outline" asChild className="w-full" size="lg">
-                  <Link href={`/docs/${invitation.mod.slug}`}>
+                  <Link href={`/mod/${invitation.mod.slug}`}>
                     View Mod (if public)
                   </Link>
                 </Button>

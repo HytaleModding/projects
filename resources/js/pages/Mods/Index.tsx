@@ -70,7 +70,7 @@ export default function ModsIndex({ ownedMods, collaborativeMods }: Props) {
             </p>
           </div>
           <Button asChild size="lg" className="shadow-md">
-            <a href="/mods/create">
+            <a href="/dashboard/mods/create">
               <PlusIcon className="mr-2 h-4 w-4" />
               Create New Mod
             </a>
@@ -94,7 +94,7 @@ export default function ModsIndex({ ownedMods, collaborativeMods }: Props) {
                   Create your first mod to start building documentation
                 </p>
                 <Button asChild>
-                  <a href="/mods/create">Create Your First Mod</a>
+                  <a href="/dashboard/mods/create">Create Your First Mod</a>
                 </Button>
               </CardContent>
             </Card>
@@ -109,7 +109,7 @@ export default function ModsIndex({ ownedMods, collaborativeMods }: Props) {
                     <div className="flex items-start justify-between">
                       <CardTitle className="text-lg">
                         <a
-                          href={`/mods/${mod.slug}`}
+                          href={`/dashboard/mods//${mod.slug}`}
                           className="text-blue-600 hover:text-blue-800"
                         >
                           {mod.name}
@@ -160,7 +160,7 @@ export default function ModsIndex({ ownedMods, collaborativeMods }: Props) {
                     <div className="flex items-start justify-between">
                       <CardTitle className="text-lg">
                         <a
-                          href={`/mods/${mod.slug}`}
+                          href={`/dashboard/mods//${mod.slug}`}
                           className="text-blue-600 hover:text-blue-800"
                         >
                           {mod.name}

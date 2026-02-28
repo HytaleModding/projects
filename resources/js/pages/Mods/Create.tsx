@@ -23,7 +23,7 @@ export default function CreateMod() {
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
-    post('/mods');
+    post('/dashboard/mods');
   };
 
   return (
@@ -160,7 +160,7 @@ export default function CreateMod() {
 
               <div className="flex items-center justify-between pt-4">
                 <Button type="button" variant="outline" asChild>
-                  <a href="/mods">Cancel</a>
+                  <a href="/dashboard/mods">Cancel</a>
                 </Button>
                 <Button type="submit" disabled={processing}>
                   {processing ? 'Creating...' : 'Create Mod'}

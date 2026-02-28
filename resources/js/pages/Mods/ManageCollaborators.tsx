@@ -67,7 +67,7 @@ export default function ManageCollaborators({ mod, canManage }: Props) {
 
   const addCollaborator = (e: React.FormEvent) => {
     e.preventDefault();
-    post(`/mods/${mod.slug}/collaborators`, {
+    post(`/dashboard/mods/${mod.slug}/collaborators`, {
       onSuccess: () => {
         reset();
         setShowAddDialog(false);
@@ -104,7 +104,7 @@ export default function ManageCollaborators({ mod, canManage }: Props) {
       );
       const collaboratorName = collaboratorToRemove?.name || 'collaborator';
 
-      deleteRequest(`/mods/${mod.slug}/collaborators/${collaboratorId}`, {
+      deleteRequest(`/dashboard/mods/${mod.slug}/collaborators/${collaboratorId}`, {
         onSuccess: () => {
           sileo.success({
             title: 'Collaborator Removed',
@@ -128,11 +128,11 @@ export default function ManageCollaborators({ mod, canManage }: Props) {
     const collaboratorName = collaboratorToUpdate?.name || 'collaborator';
 
     console.log('Updating role for:', collaboratorId, 'to:', newRole);
-    console.log('URL:', `/mods/${mod.slug}/collaborators/${collaboratorId}`);
+    console.log('URL:', `/dashboard/mods//${mod.slug}/collaborators/${collaboratorId}`);
     console.log('Data:', { role: newRole });
 
     router.patch(
-      `/mods/${mod.slug}/collaborators/${collaboratorId}`,
+      `/dashboard/mods/${mod.slug}/collaborators/${collaboratorId}`,
       { role: newRole },
       {
         onSuccess: () => {
@@ -189,7 +189,7 @@ export default function ManageCollaborators({ mod, canManage }: Props) {
                 You don't have permission to manage collaborators for this mod.
               </p>
               <Button asChild>
-                <a href={`/mods/${mod.slug}`}>Back to Mod</a>
+                <a href={`/dashboard/mods/${mod.slug}`}>Back to Mod</a>
               </Button>
             </CardContent>
           </Card>
@@ -205,7 +205,7 @@ export default function ManageCollaborators({ mod, canManage }: Props) {
       <div className="mx-auto max-w-4xl px-4 py-6 sm:px-6 lg:px-8">
         <div className="mb-8">
           <nav className="mb-4 text-sm text-gray-600">
-            <a href={`/mods/${mod.slug}`} className="hover:text-gray-800">
+            <a href={`/dashboard/mods/${mod.slug}`} className="hover:text-gray-800">
               {mod.name}
             </a>
             <span className="mx-2">›</span>
@@ -308,7 +308,6 @@ export default function ManageCollaborators({ mod, canManage }: Props) {
         </div>
 
         <div className="space-y-6">
-          {/* Owner Section */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center">
@@ -338,7 +337,6 @@ export default function ManageCollaborators({ mod, canManage }: Props) {
             </CardContent>
           </Card>
 
-          {/* Collaborators Section */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center justify-between">

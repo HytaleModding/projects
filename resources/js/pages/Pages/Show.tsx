@@ -73,7 +73,7 @@ export default function ShowPage({
     return pages.map((navPage) => (
       <div key={navPage.id} className={`ml-${level * 4}`}>
         <a
-          href={`/mods/${mod.slug}/pages/${navPage.slug}`}
+          href={`/dashboard/mods/${mod.slug}/pages/${navPage.slug}`}
           className={`block rounded px-2 py-1 text-sm hover:bg-gray-100 ${
             navPage.id === page.id
               ? 'bg-blue-50 font-medium text-blue-700'
@@ -109,7 +109,7 @@ export default function ShowPage({
                 {canEdit && (
                   <div className="mt-6 border-t pt-4">
                     <Button size="sm" className="w-full" asChild>
-                      <a href={`/mods/${mod.slug}/pages/create`}>
+                      <a href={`/dashboard/mods//${mod.slug}/pages/create`}>
                         Add New Page
                       </a>
                     </Button>
@@ -123,7 +123,7 @@ export default function ShowPage({
           <div className="lg:col-span-3">
             {/* Breadcrumbs */}
             <nav className="mb-6 text-sm text-gray-600">
-              <a href={`/mods/${mod.slug}`} className="hover:text-gray-800">
+              <a href={`/dashboard/mods//${mod.slug}`} className="hover:text-gray-800">
                 {mod.name}
               </a>
               {page.path &&
@@ -137,7 +137,7 @@ export default function ShowPage({
                       </span>
                     ) : (
                       <a
-                        href={`/mods/${mod.slug}/pages/${pathItem.slug}`}
+                        href={`/dashboard/mods//${mod.slug}/pages/${pathItem.slug}`}
                         className="hover:text-gray-800"
                       >
                         {pathItem.title}
@@ -174,7 +174,7 @@ export default function ShowPage({
               <div className="flex space-x-3">
                 {mod.visibility === 'public' && (
                   <Button variant="outline" size="sm" asChild>
-                    <a href={`/docs/${mod.slug}/${page.slug}`} target="_blank">
+                    <a href={`/mod/${mod.slug}/${page.slug}`} target="_blank">
                       <EyeIcon className="mr-2 h-4 w-4" />
                       Public View
                     </a>
@@ -182,7 +182,7 @@ export default function ShowPage({
                 )}
                 {canEdit && (
                   <Button size="sm" asChild>
-                    <a href={`/mods/${mod.slug}/pages/${page.slug}/edit`}>
+                    <a href={`/dashboard/mods//${mod.slug}/pages/${page.slug}/edit`}>
                       <PencilIcon className="mr-2 h-4 w-4" />
                       Edit
                     </a>
@@ -214,7 +214,7 @@ export default function ShowPage({
                     {page.children.map((child) => (
                       <a
                         key={child.id}
-                        href={`/mods/${mod.slug}/pages/${child.slug}`}
+                        href={`/dashboard/mods//${mod.slug}/pages/${child.slug}`}
                         className="block rounded-lg border p-4 transition-shadow hover:shadow-md"
                       >
                         <h3 className="mb-1 font-medium text-gray-900">
@@ -239,7 +239,7 @@ export default function ShowPage({
                 </div>
                 {canEdit && (
                   <a
-                    href={`/mods/${mod.slug}/pages/${page.slug}/edit`}
+                    href={`/dashboard/mods//${mod.slug}/pages/${page.slug}/edit`}
                     className="text-blue-600 hover:text-blue-800"
                   >
                     Improve this page

@@ -64,9 +64,7 @@ export default function Dashboard({ stats }: Props) {
       </Head>
 
       <div className="space-y-8 pb-8">
-        {/* Hero Section */}
         <div className="relative overflow-hidden rounded-sm border border-border/50 bg-linear-to-br from-primary/10 via-purple-500/5 to-pink-500/10 p-8 md:p-10">
-          {/* Animated background blobs */}
           <div className="absolute inset-0 overflow-hidden">
             <div className="animate-blob absolute -top-4 -left-4 h-72 w-72 rounded-full bg-purple-500/20 mix-blend-multiply blur-3xl filter dark:mix-blend-normal" />
             <div className="animation-delay-2000 animate-blob absolute -top-4 -right-4 h-72 w-72 rounded-full bg-white/20 mix-blend-multiply blur-3xl filter dark:mix-blend-normal" />
@@ -88,7 +86,7 @@ export default function Dashboard({ stats }: Props) {
               documentation.
             </p>
             <div className="flex flex-wrap gap-3">
-              <Link href="/mods/create">
+              <Link href="/dashboard/mods/create">
                 <Button
                   size="lg"
                   variant="outline"
@@ -98,7 +96,7 @@ export default function Dashboard({ stats }: Props) {
                   Create New Mod
                 </Button>
               </Link>
-              <Link href="/mods">
+              <Link href="/dashboard/mods">
                 <Button size="lg" variant="ghost" className="gap-2">
                   <FolderOpen className="h-4 w-4" />
                   Browse Your Mods
@@ -210,7 +208,7 @@ export default function Dashboard({ stats }: Props) {
                         <p className="mb-4 text-sm text-muted-foreground">
                           Get started by creating your first mod
                         </p>
-                        <Link href="/mods/create">
+                        <Link href="/dashboard/mods/create">
                           <Button>
                             <Plus className="mr-2 h-4 w-4" />
                             Create Your First Mod
@@ -232,7 +230,7 @@ export default function Dashboard({ stats }: Props) {
                           : 'Create a mod first, then add documentation pages'}
                       </p>
                       {(totalMods ?? 0) > 0 && (
-                        <Link href="/mods">
+                        <Link href="/dashboard/mods">
                           <Button>
                             <Plus className="mr-2 h-4 w-4" />
                             Add Documentation
@@ -258,21 +256,21 @@ export default function Dashboard({ stats }: Props) {
                   icon={Plus}
                   label="New Mod"
                   description="Start a new project"
-                  href="/mods/create"
+                  href="/dashboard/mods/create"
                   variant="primary"
                 />
                 <QuickActionButton
                   icon={UserPlus}
                   label="Invite Collaborator"
                   description="Add team members"
-                  href={(totalMods ?? 0) > 0 ? '/mods' : '/mods/create'}
+                  href={(totalMods ?? 0) > 0 ? '/dashboard/mods' : '/dashboard/mods/create'}
                   variant="success"
                 />
                 <QuickActionButton
                   icon={FolderOpen}
                   label="Browse Mods"
                   description="View all projects"
-                  href="/mods"
+                  href="/dashboard/mods"
                 />
                 <QuickActionButton
                   icon={BookOpen}

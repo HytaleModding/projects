@@ -52,7 +52,7 @@ export default function PublicMod({ mod }: Props) {
     return pages.map((page) => (
       <div key={page.id} className={`ml-${level * 3}`}>
         <a
-          href={`/docs/${mod.slug}/${page.slug}`}
+          href={`/mod/${mod.slug}/${page.slug}`}
           className="group flex items-center rounded-md px-3 py-2 text-sm transition-colors hover:bg-accent"
         >
           <BookOpenIcon className="mr-2 h-4 w-4 text-muted-foreground group-hover:text-foreground" />
@@ -172,7 +172,7 @@ export default function PublicMod({ mod }: Props) {
                         >
                           <CardContent className="p-4">
                             <a
-                              href={`/docs/${mod.slug}/${page.slug}`}
+                              href={`/mod/${mod.slug}/${page.slug}`}
                               className="group block"
                             >
                               <h5 className="mb-2 font-medium text-foreground group-hover:text-primary">

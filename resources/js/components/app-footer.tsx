@@ -28,7 +28,7 @@ export default function AppFooter() {
               </li>
               <li>
                 <Link
-                  href="/mods"
+                  href="/dashboard/mods"
                   className="text-muted-foreground transition-colors hover:text-foreground"
                 >
                   My Mods

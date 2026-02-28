@@ -36,7 +36,7 @@ export default function EditMod({ mod }: Props) {
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
-    patch(`/mods/${mod.slug}`);
+    patch(`/dashboard/mods/${mod.slug}`);
   };
 
   const deleteMod = () => {
@@ -46,7 +46,7 @@ export default function EditMod({ mod }: Props) {
       )
     ) {
       // Handle delete
-      fetch(`/mods/${mod.slug}`, {
+      fetch(`/dashboard/mods/${mod.slug}`, {
         method: 'DELETE',
         headers: {
           'X-CSRF-TOKEN':
@@ -55,7 +55,7 @@ export default function EditMod({ mod }: Props) {
               ?.getAttribute('content') || '',
         },
       }).then(() => {
-        window.location.href = '/mods';
+        window.location.href = '/dashboard/mods';
       });
     }
   };
@@ -67,7 +67,7 @@ export default function EditMod({ mod }: Props) {
       <div className="mx-auto max-w-2xl px-4 py-6 sm:px-6 lg:px-8">
         <div className="mb-8">
           <nav className="mb-4 text-sm text-gray-600">
-            <a href={`/mods/${mod.slug}`} className="hover:text-gray-800">
+            <a href={`/dashboard/mods//${mod.slug}`} className="hover:text-gray-800">
               {mod.name}
             </a>
             <span className="mx-2">›</span>
@@ -212,7 +212,7 @@ export default function EditMod({ mod }: Props) {
 
                 <div className="flex items-center justify-between pt-4">
                   <Button type="button" variant="outline" asChild>
-                    <a href={`/mods/${mod.slug}`}>Cancel</a>
+                    <a href={`/dashboard/mods//${mod.slug}`}>Cancel</a>
                   </Button>
                   <Button type="submit" disabled={processing}>
                     {processing ? 'Saving...' : 'Save Changes'}

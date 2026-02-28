@@ -35,7 +35,7 @@ export default function CreatePage({ mod, parent }: Props) {
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
-    post(`/mods/${mod.slug}/pages`);
+    post(`/dashboard/mods/${mod.slug}/pages`);
   };
 
   return (
@@ -45,7 +45,7 @@ export default function CreatePage({ mod, parent }: Props) {
       <div className="mx-auto max-w-4xl px-4 py-6 sm:px-6 lg:px-8">
         <div className="mb-8">
           <nav className="mb-4 text-sm text-gray-600">
-            <a href={`/mods/${mod.slug}`} className="hover:text-gray-800">
+            <a href={`/dashboard/mods//${mod.slug}`} className="hover:text-gray-800">
               {mod.name}
             </a>
             {parent && (
@@ -159,7 +159,7 @@ For more information, see the other pages in this documentation."
 
           <div className="flex items-center justify-between pt-4">
             <Button type="button" variant="outline" asChild>
-              <a href={`/mods/${mod.slug}`}>Cancel</a>
+              <a href={`/dashboard/mods//${mod.slug}`}>Cancel</a>
             </Button>
             <div className="flex space-x-3">
               <Button
@@ -167,7 +167,7 @@ For more information, see the other pages in this documentation."
                 variant="outline"
                 onClick={() => {
                   setData('published', false);
-                  post(`/mods/${mod.slug}/pages`);
+                  post(`/dashboard/mods//${mod.slug}/pages`);
                 }}
                 disabled={processing}
               >
