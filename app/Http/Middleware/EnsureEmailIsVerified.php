@@ -18,10 +18,10 @@ class EnsureEmailIsVerified
     {
         $user = Auth::user();
 
-        if ($user && !$user->hasVerifiedEmail()) {
+        if ($user && ! $user->hasVerifiedEmail()) {
             if ($request->expectsJson()) {
                 return response()->json([
-                    'message' => 'Your email address must be verified before you can perform this action.'
+                    'message' => 'Your email address must be verified before you can perform this action.',
                 ], 403);
             }
 
