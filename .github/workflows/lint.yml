@@ -20,13 +20,11 @@ jobs:
           php-version: '8.4'
 
       - uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest
 
       - name: Install Dependencies
         run: |
           composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
-          bun install
+          bun install --frozen-lockfile
 
       - name: Run Pint
         run: composer lint

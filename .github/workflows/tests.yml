@@ -27,11 +27,9 @@ jobs:
           coverage: xdebug
 
       - uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest
 
       - name: Install Bun Dependencies
-        run: bun install
+        run: bun install --frozen-lockfile
 
       - name: Install Dependencies
         run: composer install --no-interaction --prefer-dist --optimize-autoloader
