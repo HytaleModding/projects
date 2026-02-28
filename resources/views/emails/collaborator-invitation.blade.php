@@ -30,5 +30,5 @@ Thanks,<br>
 {{ config('app.name') }}
 
 ---
-<small>This invitation was sent to {{ $collaboratorName }}. If you're not expecting this email, please contact us.</small>
+<small>This invitation was sent to {{ $collaboratorName }}</small>
 @endcomponent
