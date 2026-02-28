@@ -77,7 +77,7 @@ class ModCollaboratorTest extends TestCase
         $response->assertRedirect();
         $response->assertSessionHas('success');
 
-        $this->assertDatabaseHas('mod_users', [
+        $this->assertDatabaseHas('mod_invitations', [
             'mod_id' => $mod->id,
             'user_id' => $collaborator->id,
             'role' => 'editor',
@@ -103,7 +103,7 @@ class ModCollaboratorTest extends TestCase
 
         $response->assertRedirect();
 
-        $this->assertDatabaseHas('mod_users', [
+        $this->assertDatabaseHas('mod_invitations', [
             'mod_id' => $mod->id,
             'user_id' => $collaborator->id,
             'role' => 'viewer',
@@ -365,7 +365,7 @@ class ModCollaboratorTest extends TestCase
 
         $response = $this->get(route('invitations.show', $invitation->token));
         $response->assertOk();
-        $response->assertInertia(fn ($page) => $page->component('Invitations/Accept'));
+        $response->assertInertia(fn ($page) => $page->component('Invitations/Show'));
     }
 
     public function test_can_accept_invitation()

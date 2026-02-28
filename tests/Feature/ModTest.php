@@ -210,7 +210,7 @@ class ModTest extends TestCase
         $owner = User::factory()->create();
         $mod = Mod::factory()->public()->create(['owner_id' => $owner->id]);
 
-        $response = $this->get("/docs/{$mod->slug}");
+        $response = $this->get("/mod/{$mod->slug}");
         $response->assertOk();
         $response->assertInertia(fn ($page) => $page->component('Public/Mod'));
     }

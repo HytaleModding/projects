@@ -163,7 +163,7 @@ class PageTest extends TestCase
         $mod = Mod::factory()->public()->create(['owner_id' => $user->id]);
         $page = Page::factory()->create(['mod_id' => $mod->id, 'published' => true]);
 
-        $response = $this->get("/docs/{$mod->slug}/{$page->slug}");
+        $response = $this->get("/mod/{$mod->slug}/{$page->slug}");
         $response->assertOk();
         $response->assertInertia(fn ($page) => $page->component('Public/Page'));
     }
