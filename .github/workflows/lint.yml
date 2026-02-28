@@ -32,6 +32,9 @@ jobs:
       - name: Format Frontend
         run: bun run format:check
 
+      - name: Generate Wayfinder types
+        run: php artisan wayfinder:generate
+
       - name: Lint Frontend
         run: bun run lint:check
 
