@@ -50,6 +50,24 @@ class ModTest extends TestCase
         $response->assertRedirect(route('mods.show', $mod));
     }
 
+    public function test_unverified_user_cannot_create_mod()
+    {
+        $user = User::factory()->unverified()->create();
+        $this->actingAs($user);
+
+        $modData = [
+            'name' => 'Test Mod',
+            'description' => 'A test mod description',
+            'visibility' => 'public',
+            'storage_driver' => 'local',
+        ];
+
+        $response = $this->post(route('mods.store'), $modData);
+        $response->assertRedirect(route('verification.notice'));
+
+        $this->assertDatabaseMissing('mods', ['name' => 'Test Mod']);
+    }
+
     public function test_mod_creation_requires_name()
     {
         $user = User::factory()->create();

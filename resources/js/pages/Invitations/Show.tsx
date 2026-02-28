@@ -3,7 +3,7 @@ import {
   ClockIcon,
   UserGroupIcon,
 } from '@heroicons/react/24/outline';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, useForm } from '@inertiajs/react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -54,7 +54,7 @@ export default function AcceptInvitation({ invitation }: Props) {
 
   const handleReject = () => {
     post(`/invitations/${invitation.token}/reject`);
-  }
+  };
 
   const getRoleColor = (role: string) => {
     switch (role) {
@@ -157,8 +157,13 @@ export default function AcceptInvitation({ invitation }: Props) {
                   {processing ? 'Accepting...' : 'Accept Invitation'}
                 </Button>
 
-                <Button onClick={handleReject} disabled={processing} className="w-full" size="lg">
-                  { processing ? 'Rejecting...' : <span>Reject Invitation</span> }
+                <Button
+                  onClick={handleReject}
+                  disabled={processing}
+                  className="w-full"
+                  size="lg"
+                >
+                  {processing ? 'Rejecting...' : <span>Reject Invitation</span>}
                 </Button>
               </div>
 

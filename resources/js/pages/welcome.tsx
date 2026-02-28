@@ -1,6 +1,6 @@
 import { Head, Link, usePage } from '@inertiajs/react';
-import { Button } from '@/components/ui/button';
 import HytaleModdingLogo from '@/components/hytale-modding-logo';
+import { Button } from '@/components/ui/button';
 import { dashboard, login, register } from '@/routes';
 import type { SharedData } from '@/types';
 
